@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+# Builds build/misty-mahjong.apk from web/ and android/ with the Android SDK
+# build tools directly, without Gradle. Run `npm test` first for the game logic.
+set -euo pipefail
+
+# --debug marks the APK debuggable, which turns on WebView remote inspection.
+debug=()
+[ "${1:-}" = "--debug" ] && debug=(--debug-mode)
+
+root=$(cd "$(dirname "$0")/.." && pwd)
+sdk=${ANDROID_HOME:-/usr/lib/android-sdk}
+tools=$sdk/build-tools/34.0.0
+android_jar=$sdk/platforms/android-34/android.jar
+keystore=${KEYSTORE:-$HOME/.android/debug.keystore}
+out=$root/build
+
+rm -rf "${out:?}"
+mkdir -p "$out/assets" "$out/classes" "$out/dex"
+
+# The web game, served by MainActivity from assets/game/.
+cp -r "$root/web" "$out/assets/game"
+test -f "$out/assets/game/index.html"
+test -f "$out/assets/game/assets/backgrounds/index.json"
+test -f "$out/assets/game/assets/audio/music.json"
+
+"$tools/aapt2" compile --dir "$root/android/res" -o "$out/res.zip"
+"$tools/aapt2" link -I "$android_jar" --manifest "$root/android/AndroidManifest.xml" \
+  --no-version-vectors "${debug[@]}" -A "$out/assets" -o "$out/unsigned.apk" "$out/res.zip"
+
+find "$root/android/src" -name '*.java' -print0 |
+  xargs -0 javac -nowarn --release 11 -Xlint:-options -classpath "$android_jar" -d "$out/classes"
+find "$out/classes" -name '*.class' -print0 |
+  xargs -0 "$tools/d8" --release --min-api 24 --lib "$android_jar" --output "$out/dex"
+(cd "$out/dex" && zip -q "$out/unsigned.apk" classes.dex)
+
+"$tools/zipalign" -f -p 4 "$out/unsigned.apk" "$out/aligned.apk"
+# The standard Android debug key. Updates install over an existing copy only
+# when signed with the same key, so keep this file.
+if [ ! -f "$keystore" ]; then
+  mkdir -p "$(dirname "$keystore")"
+  keytool -genkeypair -keystore "$keystore" -alias androiddebugkey -storepass android \
+    -keypass android -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Android Debug,O=Android,C=US"
+fi
+"$tools/apksigner" sign --ks "$keystore" --ks-pass pass:android --key-pass pass:android \
+  --out "$out/misty-mahjong.apk" "$out/aligned.apk"
+echo "$out/misty-mahjong.apk"

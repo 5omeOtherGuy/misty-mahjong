@@ -1,0 +1,19 @@
+{
+ "sampleRate": 48000,
+ "tracks": [
+  {
+   "id": "mondlicht",
+   "name": "Mondlicht auf dem Teich",
+   "file": "assets/audio/music-mondlicht.ogg",
+   "loopSeconds": 74.66666666666667,
+   "samples": 3584000
+  },
+  {
+   "id": "koto-erhu",
+   "name": "Koto und Erhu",
+   "file": "assets/audio/music-koto-erhu.ogg",
+   "loopSeconds": 40.8,
+   "samples": 1958400
+  }
+ ]
+}

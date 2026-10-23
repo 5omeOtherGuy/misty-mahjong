@@ -1,0 +1,50 @@
+[
+ {
+  "id": "nebelberge",
+  "name": "Nebelberge",
+  "file": "nebelberge.jpg",
+  "thumb": "nebelberge_thumb.jpg",
+  "mat": "rgba(35, 34, 33, 0.42)",
+  "accent": "#c9a45c"
+ },
+ {
+  "id": "pflaumenbluete",
+  "name": "Pflaumenblüte",
+  "file": "pflaumenbluete.jpg",
+  "thumb": "pflaumenbluete_thumb.jpg",
+  "mat": "rgba(21, 24, 30, 0.42)",
+  "accent": "#d9b56e"
+ },
+ {
+  "id": "bambushain",
+  "name": "Bambushain",
+  "file": "bambushain.jpg",
+  "thumb": "bambushain_thumb.jpg",
+  "mat": "rgba(32, 37, 31, 0.42)",
+  "accent": "#cdb062"
+ },
+ {
+  "id": "stiller_see",
+  "name": "Stiller See",
+  "file": "stiller_see.jpg",
+  "thumb": "stiller_see_thumb.jpg",
+  "mat": "rgba(30, 29, 29, 0.42)",
+  "accent": "#d4a35a"
+ },
+ {
+  "id": "kranichmorgen",
+  "name": "Kranichmorgen",
+  "file": "kranichmorgen.jpg",
+  "thumb": "kranichmorgen_thumb.jpg",
+  "mat": "rgba(49, 42, 34, 0.42)",
+  "accent": "#b8873e"
+ },
+ {
+  "id": "mondnacht",
+  "name": "Mondnacht",
+  "file": "mondnacht.jpg",
+  "thumb": "mondnacht_thumb.jpg",
+  "mat": "rgba(20, 24, 29, 0.42)",
+  "accent": "#d6b878"
+ }
+]

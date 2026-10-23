@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The Misty Mahjong mark: a paper disc with misty mountains and a moon inside
+     a brush-ink ring. The SVG at web/assets/logo.svg is the source; the
+     200-unit artwork is scaled into the 66dp safe zone of the icon. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp" android:height="108dp"
+    android:viewportWidth="108" android:viewportHeight="108">
+    <group android:scaleX="0.34" android:scaleY="0.34" android:translateX="20" android:translateY="20">
+        <path android:pathData="M100,22 A78,78 0 1,1 99.9,22 Z" android:fillColor="#F4ECD9" />
+        <group>
+            <clip-path android:pathData="M100,22 A78,78 0 1,1 99.9,22 Z" />
+            <path android:pathData="M10,128 L48,78 L72,104 L96,66 L124,102 L150,74 L190,128 Z" android:fillColor="#8AA0A3" android:fillAlpha="0.55" />
+            <path android:pathData="M0,112 h200 v16 h-200 z" android:fillAlpha="0.9">
+                <aapt:attr name="android:fillColor">
+                    <gradient android:startX="0" android:startY="120" android:endX="200" android:endY="120" android:type="linear">
+                        <item android:offset="0" android:color="#00F6EFE0" />
+                        <item android:offset="0.2" android:color="#F2F6EFE0" />
+                        <item android:offset="0.8" android:color="#F2F6EFE0" />
+                        <item android:offset="1" android:color="#00F6EFE0" />
+                    </gradient>
+                </aapt:attr>
+            </path>
+            <path android:pathData="M0,150 L54,92 L82,122 L104,96 L140,142 L200,150 L200,200 L0,200 Z">
+                <aapt:attr name="android:fillColor">
+                    <gradient android:startX="0" android:startY="90" android:endX="200" android:endY="200" android:type="linear">
+                        <item android:offset="0" android:color="#FF2A3F4A" />
+                        <item android:offset="1" android:color="#FF121C20" />
+                    </gradient>
+                </aapt:attr>
+            </path>
+            <path android:pathData="M0,146 h200 v12 h-200 z" android:fillAlpha="0.8">
+                <aapt:attr name="android:fillColor">
+                    <gradient android:startX="0" android:startY="150" android:endX="200" android:endY="150" android:type="linear">
+                        <item android:offset="0" android:color="#00F6EFE0" />
+                        <item android:offset="0.2" android:color="#F2F6EFE0" />
+                        <item android:offset="0.8" android:color="#F2F6EFE0" />
+                        <item android:offset="1" android:color="#00F6EFE0" />
+                    </gradient>
+                </aapt:attr>
+            </path>
+            <path android:pathData="M118,128 l0,-22 M112,112 l6,-8 6,8 M110,120 l8,-10 8,10 M108,128 l10,-12 10,12"
+                android:strokeColor="#121C20" android:strokeWidth="2.2" android:strokeLineCap="round" android:strokeLineJoin="round" />
+            <path android:pathData="M140,40 A14,14 0 1,1 139.9,40 Z" android:fillColor="#E9C77A" />
+            <path android:pathData="M146,38 A12,12 0 1,1 145.9,38 Z" android:fillColor="#F4ECD9" />
+        </group>
+        <path android:pathData="M152,48 A74,74 0 1,1 122,28" android:strokeColor="#1B2328" android:strokeWidth="8" android:strokeLineCap="round" android:strokeAlpha="0.92" />
+        <path android:pathData="M150,148 h22 v22 h-22 z" android:fillColor="#B8463B" />
+    </group>
+</vector>

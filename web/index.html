@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Misty Mahjong</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+<meta name="color-scheme" content="dark">
+<link rel="stylesheet" href="css/app.css">
+</head>
+<body>
+<div id="bg" class="bg" aria-hidden="true">
+  <div class="bg-img" id="bg-a"></div>
+  <div class="bg-img" id="bg-b"></div>
+  <div class="mist mist-a"></div>
+  <div class="mist mist-b"></div>
+  <div class="vignette"></div>
+</div>
+
+<canvas id="board"></canvas>
+<canvas id="fx"></canvas>
+
+<div id="game-layer" class="hidden">
+  <div id="hud-stats" class="hud">
+    <div class="stat stat-time"><span class="label">Zeit</span><span class="value" id="hud-time">10:00</span></div>
+    <div class="stat"><span class="label">Punkte</span><span class="value" id="hud-score">0</span></div>
+    <div class="stat"><span class="label">Paare</span><span class="value" id="hud-pairs">0</span></div>
+    <div class="stat"><span class="label">Steine</span><span class="value" id="hud-tiles">144</span></div>
+    <div id="collect" aria-hidden="true"></div>
+  </div>
+  <div id="stage"></div>
+  <div id="hud-buttons" class="hud">
+    <button class="icon-btn" id="btn-hint" aria-label="Tipp">
+      <svg viewBox="0 0 24 24"><path d="M12 3a6 6 0 0 0-3.5 10.9c.6.5.9 1 .9 1.6V17h5.2v-1.5c0-.6.3-1.1.9-1.6A6 6 0 0 0 12 3z"/><path d="M9.6 19h4.8M10.4 21h3.2" stroke-linecap="round"/></svg>
+      <span>Tipp</span>
+    </button>
+    <button class="icon-btn" id="btn-pause" aria-label="Pause">
+      <svg viewBox="0 0 24 24"><path d="M8 5v14M16 5v14" stroke-linecap="round" stroke-width="2.4"/></svg>
+      <span>Pause</span>
+    </button>
+  </div>
+</div>
+
+<div id="toast" class="toast" role="status"></div>
+
+<section id="title" class="screen title-screen">
+  <div class="title-inner">
+    <div class="logo" id="logo"></div>
+    <h1 class="wordmark">Misty Mahjong</h1>
+    <p class="tagline">Ein stilles Mahjong</p>
+    <div class="menu">
+      <button class="btn primary" id="btn-play">Spielen</button>
+      <button class="btn" id="btn-settings">Einstellungen</button>
+      <button class="btn" id="btn-help">So wird gespielt</button>
+    </div>
+    <p class="highscore" id="title-highscore"></p>
+  </div>
+</section>
+
+<section id="pause" class="screen modal">
+  <div class="panel">
+    <h2>Pause</h2>
+    <div class="menu">
+      <button class="btn primary" id="btn-resume">Weiterspielen</button>
+      <button class="btn" id="btn-pause-settings">Einstellungen</button>
+      <button class="btn" id="btn-pause-help">So wird gespielt</button>
+      <button class="btn" id="btn-pause-new">Neues Spiel</button>
+      <button class="btn quiet" id="btn-pause-quit">Beenden</button>
+    </div>
+  </div>
+</section>
+
+<section id="confirm" class="screen modal">
+  <div class="panel narrow">
+    <h2>Spiel wirklich beenden?</h2>
+    <p class="muted">Die bisherigen Punkte werden gewertet.</p>
+    <div class="menu row">
+      <button class="btn" id="btn-confirm-no">Nein</button>
+      <button class="btn primary" id="btn-confirm-yes">Ja, beenden</button>
+    </div>
+  </div>
+</section>
+
+<section id="settings" class="screen modal">
+  <div class="panel wide">
+    <h2>Einstellungen</h2>
+    <div class="settings-grid">
+      <label class="setting"><span>Musik</span><input type="range" id="set-music" min="0" max="1" step="0.05"></label>
+      <label class="setting"><span>Effekte</span><input type="range" id="set-effects" min="0" max="1" step="0.05"></label>
+      <label class="setting toggle"><span>Vibration</span><input type="checkbox" id="set-haptics"><i></i></label>
+      <label class="setting toggle"><span>Freie Steine hervorheben</span><input type="checkbox" id="set-markfree"><i></i></label>
+      <div class="setting wide"><span>Musikstück</span><div class="choices" id="set-track"></div></div>
+    </div>
+    <div class="pickers">
+      <div><h3>Steine</h3><div class="backgrounds" id="set-picker"></div></div>
+      <div><h3>Hintergrund</h3><div class="backgrounds" id="bg-picker"></div></div>
+    </div>
+    <div class="menu row">
+      <button class="btn primary" id="btn-settings-close">Schließen</button>
+    </div>
+  </div>
+</section>
+
+<section id="help" class="screen modal">
+  <div class="panel wide help">
+    <h2>So wird gespielt</h2>
+    <div class="help-grid">
+      <div class="help-item"><canvas class="help-tiles" data-tiles="12,12" width="1" height="1"></canvas><p>Tippe zwei gleiche Steine an, um sie vom Spielfeld zu nehmen.</p></div>
+      <div class="help-item"><canvas class="help-tiles" data-tiles="34,36" width="1" height="1"></canvas><p>Alle Blumen passen zueinander, ebenso alle Jahreszeiten.</p></div>
+      <div class="help-item"><canvas class="help-tiles" data-tiles="free" width="1" height="1"></canvas><p>Ein Stein ist frei, wenn kein anderer auf ihm liegt und seine linke oder rechte Seite offen ist.</p></div>
+      <div class="help-item"><canvas class="help-tiles" data-tiles="31,27" width="1" height="1"></canvas><p>Jedes Paar zählt den Wert seiner Farbe mal die noch liegenden Steine. Folgen in derselben Farbe vervielfachen die Punkte; ein Tipp unterbricht die Folge.</p></div>
+    </div>
+    <p class="muted">Die Uhr läuft ab dem ersten Paar zehn Minuten. Wer das Feld leert, bekommt die Restzeit als Bonus. Gehen die Paare aus, mischt der Garten die Steine neu.</p>
+    <div class="menu row">
+      <button class="btn primary" id="btn-help-close">Schließen</button>
+    </div>
+  </div>
+</section>
+
+<section id="end" class="screen modal">
+  <div class="panel">
+    <h2 id="end-title">Der Garten ist frei</h2>
+    <p class="end-record" id="end-record">Neue Bestleistung</p>
+    <dl class="scores">
+      <div><dt>Punkte für Paare</dt><dd id="end-base">0</dd></div>
+      <div><dt id="end-completion-label">Abschluss</dt><dd id="end-completion">0</dd></div>
+      <div><dt>Zeitbonus</dt><dd id="end-time">0</dd></div>
+      <div class="total"><dt>Gesamt</dt><dd id="end-total">0</dd></div>
+    </dl>
+    <p class="muted" id="end-highscore"></p>
+    <div class="menu row">
+      <button class="btn" id="btn-end-title">Zum Anfang</button>
+      <button class="btn primary" id="btn-end-again">Noch einmal</button>
+    </div>
+  </div>
+</section>
+
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,10 @@
+/build/
+*.apk
+node_modules/
+
+.env*
+!.env.example
+/.amp/in/
+.idea/
+.vscode/
+*.swp
