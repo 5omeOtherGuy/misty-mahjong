@@ -11,6 +11,7 @@ export const DEFAULTS = {
   background: null, // the manifest's first entry
   tileset: null, // tilesets.js DEFAULT_TILESET
   track: null, // the music manifest's first track
+  language: null, // follow the device's language preferences
 };
 
 function read(key) {

@@ -9,7 +9,7 @@ import { TILESETS, findTileSet } from './tilesets.js';
 import { Audio } from './audio.js';
 import { Settings } from './settings.js';
 import { loadBackgrounds, preload } from './backgrounds.js';
-import { T, formatTime, formatNumber } from './i18n.js';
+import { T, LANGUAGES, setLanguage, formatTime, formatNumber } from './i18n.js';
 import { TIME_LIMIT_MS } from './scoring.js';
 
 const $ = (id) => document.getElementById(id);
@@ -32,6 +32,7 @@ class App {
   }
 
   async start() {
+    this.applyLanguage();
     await this.loadFonts();
     this.backgrounds = await loadBackgrounds();
     this.applyBackground(this.settings.get('background') || this.backgrounds[0]?.id, { instant: true });
@@ -58,6 +59,28 @@ class App {
       this.buildTrackPicker();
       this.audio.startMusic();
     });
+  }
+
+  applyLanguage() {
+    const language = setLanguage(this.settings.get('language'));
+    document.documentElement.lang = language;
+    document.documentElement.dir = language === 'ar' ? 'rtl' : 'ltr';
+    for (const el of document.querySelectorAll('[data-i18n]')) el.textContent = T[el.dataset.i18n];
+    for (const el of document.querySelectorAll('[data-i18n-aria]')) el.setAttribute('aria-label', T[el.dataset.i18nAria]);
+    const select = $('set-language');
+    const automatic = select.querySelector('option[value=""]');
+    if (automatic) automatic.textContent = T.automatic;
+    select.value = this.settings.get('language') || '';
+    const hs = this.settings.highScore;
+    $('title-highscore').textContent = hs > 0 ? `${T.highScore}: ${formatNumber(hs)}` : T.noHighScore;
+    // Refresh labels without rebuilding pickers or losing their scroll/focus.
+    for (const el of document.querySelectorAll('#set-picker .thumb, #bg-picker .thumb')) {
+      el.querySelector('span').textContent = T[el.dataset.id] || el.querySelector('span').textContent;
+    }
+    for (const el of document.querySelectorAll('#set-track .choice')) el.textContent = T[el.dataset.id] || el.textContent;
+    this.updateHud();
+    if (this.game?.summary) this.updateEnd(this.game.summary);
+    if (this.backgrounds) this.handleResize();
   }
 
   async loadFonts() {
@@ -177,7 +200,7 @@ class App {
         this.fx.burst(pb, size, chained ? 5 : 3);
         const mid = { x: (pa.x + pb.x) / 2, y: (pa.y + pb.y) / 2 - size * 0.2 };
         this.fx.label(mid, `+${formatNumber(points)}`, {
-          sub: chained ? `${T.chain} ×${chain}` : null,
+          sub: chained ? `${T.chain} ×${formatNumber(chain)}` : null,
           size: Math.max(18, size * 0.42),
           color: chained ? '#f3d78a' : '#f7efd9',
         });
@@ -207,21 +230,25 @@ class App {
     if (won) await this.view.celebratePile();
     await new Promise((r) => setTimeout(r, won ? 500 : 400));
     this.audio.play(won ? 'win' : 'over');
+    $('end-record').classList.toggle('hidden', !record);
+    this.updateEnd(summary);
+    this.show('end');
+    if (won) this.fx.celebrate();
+  }
+
+  updateEnd(summary) {
     $('end-title').textContent = {
       [RESULT.WON]: T.endWon,
       [RESULT.TIMEOUT]: T.endTimeout,
       [RESULT.QUIT]: T.endQuit,
       [RESULT.STUCK]: T.endStuck,
     }[summary.result];
-    $('end-record').classList.toggle('hidden', !record);
     $('end-base').textContent = formatNumber(summary.base);
-    $('end-completion-label').textContent = `${T.completion} · ${summary.percent} %`;
+    $('end-completion-label').textContent = `${T.completion} · ${formatNumber(summary.percent)} %`;
     $('end-completion').textContent = formatNumber(summary.completion);
     $('end-time').textContent = formatNumber(summary.time);
     $('end-total').textContent = formatNumber(summary.total);
     $('end-highscore').textContent = `${T.highScore}: ${formatNumber(this.settings.highScore)}`;
-    this.show('end');
-    if (won) this.fx.celebrate();
   }
 
   // ---- loop and HUD -----------------------------------------------------
@@ -256,8 +283,8 @@ class App {
     const g = this.game;
     if (!g) return;
     $('hud-score').textContent = formatNumber(g.scorer.score);
-    $('hud-pairs').textContent = String(g.matchCount);
-    $('hud-tiles').textContent = String(g.tilesLeft);
+    $('hud-pairs').textContent = formatNumber(g.matchCount);
+    $('hud-tiles').textContent = formatNumber(g.tilesLeft);
     this.updateTime();
     $('btn-hint').disabled = g.state === STATE.OVER;
   }
@@ -385,6 +412,21 @@ class App {
 
   bindSettings() {
     const s = this.settings;
+    const language = $('set-language');
+    language.add(new Option(T.automatic, ''));
+    for (const [id, name] of Object.entries(LANGUAGES)) {
+      const option = new Option(name, id);
+      option.lang = id;
+      language.add(option);
+    }
+    language.value = s.get('language') || '';
+    language.addEventListener('change', () => s.set('language', language.value || null));
+    s.onChange((name) => {
+      if (name === 'language') this.applyLanguage();
+    });
+    window.addEventListener('languagechange', () => {
+      if (!s.get('language')) this.applyLanguage();
+    });
     const music = $('set-music'), effects = $('set-effects');
     const haptics = $('set-haptics'), markFree = $('set-markfree');
     music.value = s.get('music');
@@ -409,7 +451,7 @@ class App {
       const b = document.createElement('button');
       b.className = 'choice';
       b.dataset.id = track.id;
-      b.textContent = track.name;
+      b.textContent = T[track.id] || track.name;
       b.addEventListener('click', () => {
         this.audio.play('tap', { volume: 0.5 });
         this.settings.set('track', track.id);
@@ -432,7 +474,8 @@ class App {
       const b = document.createElement('button');
       b.className = 'thumb';
       b.dataset.id = bg.id;
-      b.innerHTML = `<img alt="" src="${bg.thumb}"><span>${bg.name}</span>`;
+      b.innerHTML = `<img alt="" src="${bg.thumb}"><span></span>`;
+      b.querySelector('span').textContent = T[bg.id] || bg.name;
       b.addEventListener('click', () => {
         this.audio.play('tap', { volume: 0.5 });
         this.settings.set('background', bg.id);
@@ -468,7 +511,7 @@ class App {
       ctx.drawImage(back.canvas, cw / 2 + tw * 0.12 - back.origin, (ch - back.h) / 2 - back.origin - 2, back.canvas.width / dpr, back.canvas.height / dpr);
       ctx.drawImage(face.canvas, cw / 2 - tw * 1.1 - face.origin, (ch - face.h) / 2 - face.origin - 2, face.canvas.width / dpr, face.canvas.height / dpr);
       const label = document.createElement('span');
-      label.textContent = set.name;
+      label.textContent = T[set.id] || set.name;
       b.append(c, label);
       b.addEventListener('click', () => {
         this.audio.play('tap', { volume: 0.5 });

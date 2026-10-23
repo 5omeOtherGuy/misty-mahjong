@@ -48,7 +48,7 @@ html, body {
   user-select: none;
   -webkit-user-select: none;
 }
-button { font: inherit; color: inherit; }
+button, select { font: inherit; color: inherit; }
 
 /* Background painting with two layers for crossfades, drifting mist and a soft vignette. */
 .bg { position: fixed; inset: 0; overflow: hidden; }
@@ -125,6 +125,7 @@ body.tall #hud-buttons { flex-direction: row; align-items: center; padding: 10px
 .stat .value {
   font-family: var(--font-display); font-weight: 600; font-size: 26px; line-height: 1.1;
   font-variant-numeric: lining-nums tabular-nums;
+  direction: ltr; unicode-bidi: isolate;
   text-shadow: 0 1px 10px rgba(0, 0, 0, 0.55);
 }
 .stat-time .value { font-size: 34px; }
@@ -133,7 +134,7 @@ body.tall #hud-buttons { flex-direction: row; align-items: center; padding: 10px
 
 .icon-btn {
   display: flex; flex-direction: column; align-items: center; gap: 2px;
-  width: 62px; height: 62px; border-radius: 18px;
+  width: 62px; min-height: 62px; padding: 6px; border-radius: 18px;
   border: 1px solid rgba(255, 248, 230, 0.22);
   background: rgba(20, 30, 28, 0.42);
   color: var(--hud-text);
@@ -144,7 +145,7 @@ body.tall #hud-buttons { flex-direction: row; align-items: center; padding: 10px
   justify-content: center;
 }
 .icon-btn svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 1.7; }
-.icon-btn span { font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--hud-muted); }
+.icon-btn span { max-width: 100%; overflow-wrap: anywhere; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--hud-muted); }
 .icon-btn:active { transform: scale(0.94); background: rgba(20, 30, 28, 0.6); }
 .icon-btn[disabled] { opacity: 0.4; }
 
@@ -186,7 +187,7 @@ body.tall #hud-buttons { flex-direction: row; align-items: center; padding: 10px
 .muted { color: var(--muted); font-size: 14px; margin: 4px 0 10px; }
 
 .menu { display: flex; flex-direction: column; gap: 10px; align-items: stretch; }
-.menu.row { flex-direction: row; justify-content: center; margin-top: 14px; }
+.menu.row { flex-direction: row; flex-wrap: wrap; justify-content: center; margin-top: 14px; }
 .btn {
   padding: 12px 26px; border-radius: 999px;
   border: 1px solid var(--line);
@@ -217,9 +218,13 @@ body.tall #hud-buttons { flex-direction: row; align-items: center; padding: 10px
 .highscore { font-variant-numeric: lining-nums; margin: 16px 0 0; font-family: var(--font-display); font-size: 17px; color: rgba(247, 241, 227, 0.75); letter-spacing: 0.04em; }
 
 /* Settings */
-.settings-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 26px; text-align: left; }
+.settings-grid { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 10px 26px; text-align: start; }
 .setting { display: flex; align-items: center; justify-content: space-between; gap: 14px; font-size: 16px; padding: 6px 0; }
-.setting input[type=range] { width: 46%; accent-color: var(--jade); }
+.setting input[type=range] { width: 46%; min-width: 0; flex-shrink: 0; accent-color: var(--jade); }
+.setting select {
+  max-width: 65%; min-width: 0; padding: 6px 12px; border-radius: 10px;
+  border: 1px solid var(--line); background: var(--paper); color: var(--ink);
+}
 .setting.toggle input { position: absolute; opacity: 0; width: 0; height: 0; }
 .setting.toggle i {
   position: relative; width: 46px; height: 26px; border-radius: 999px; background: rgba(0,0,0,0.14); transition: background 0.2s; flex: none;
@@ -263,7 +268,7 @@ body.tall #hud-buttons { flex-direction: row; align-items: center; padding: 10px
 .thumb:active img, .thumb:active canvas { transform: scale(0.96); }
 
 /* Help */
-.help-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 18px; text-align: left; }
+.help-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px 18px; text-align: start; }
 .help-item { display: flex; gap: 12px; align-items: center; }
 .help-item canvas { width: 96px; height: 70px; flex: none; }
 .help-item p { margin: 0; font-size: 14px; line-height: 1.4; }
@@ -271,7 +276,7 @@ body.tall #hud-buttons { flex-direction: row; align-items: center; padding: 10px
 /* End */
 .end-record { margin: -4px 0 10px; font-family: var(--font-display); color: var(--gold); font-size: 18px; letter-spacing: 0.08em; text-transform: uppercase; }
 .end-record.hidden { display: none; }
-.scores { margin: 0; display: grid; gap: 6px; text-align: left; }
+.scores { margin: 0; display: grid; gap: 6px; text-align: start; }
 .scores div { display: flex; justify-content: space-between; align-items: baseline; padding: 2px 0; border-bottom: 1px solid var(--line); }
 .scores dt { color: var(--muted); font-size: 15px; }
 .scores dd { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 22px; font-variant-numeric: lining-nums tabular-nums; }
@@ -289,9 +294,18 @@ body.tall #hud-buttons { flex-direction: row; align-items: center; padding: 10px
   backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
   border: 1px solid rgba(255,255,255,0.14);
   opacity: 0; pointer-events: none; transition: opacity 0.35s ease, transform 0.4s var(--ease);
-  white-space: nowrap;
+  max-width: 90vw; width: max-content; text-align: center;
 }
 .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+/* System fonts cover scripts outside the bundled Latin subsets. Avoid Latin
+   letter spacing in connected scripts and keep the product name left-to-right. */
+:is(:lang(ar), :lang(hi), :lang(ja), :lang(ko), :lang(zh), :lang(ru), :lang(uk)) {
+  --font-display: system-ui, sans-serif;
+  --font-text: system-ui, sans-serif;
+}
+:is(:lang(ar), :lang(hi)) :is(.btn, .tagline, .highscore, .panel h3, .stat .label, .icon-btn span, .end-record) { letter-spacing: normal; }
+.wordmark { direction: ltr; unicode-bidi: isolate; font-family: 'NebelDisplay', Georgia, serif; }
 
 @media (max-height: 420px) {
   .panel { padding: 14px 20px; }
@@ -300,7 +314,10 @@ body.tall #hud-buttons { flex-direction: row; align-items: center; padding: 10px
   .menu { gap: 7px; }
   .stat .value { font-size: 22px; }
   .stat-time .value { font-size: 28px; }
-  .icon-btn { width: 54px; height: 54px; border-radius: 15px; }
+  .icon-btn { width: 54px; min-height: 54px; border-radius: 15px; }
+  .settings-grid { row-gap: 4px; }
+  .setting { padding: 2px 0; }
+  .setting select { padding: 3px 10px; }
   .panel h3 { margin: 8px 0 6px; }
   .thumb { width: 96px; }
   .thumb img, .thumb canvas { width: 96px; height: 60px; }

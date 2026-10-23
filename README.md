@@ -1,56 +1,70 @@
 # Misty Mahjong
 
-Ein ruhiges Mahjong-Solitär für Android-Smartphones und -Tablets, mit fünf eigenen Steinsätzen aus edlen Materialien, eigener Musik und auswählbaren Hintergründen im Stil asiatischer Tuschmalerei.
+A calm Mahjong solitaire game for Android phones and tablets, with five original tile sets inspired by fine materials, original music, and a choice of Asian ink-wash backgrounds.
 
-Status: prototype. Die Oberfläche ist auf Deutsch.
+Status: prototype.
 
-![Spielfeld auf einem Smartphone](docs/screenshot.jpg)
+![Game board on a phone](docs/screenshot.jpg)
 
-## Was die App macht
+## Features
 
-Misty Mahjong ist ein klassisches Mahjong-Solitär im Schildkröten-Layout mit 144 Steinen, das komplett offline in einem Vollbild-WebView läuft:
+Misty Mahjong is a classic 144-tile Mahjong solitaire game in the turtle layout. It runs entirely offline in a full-screen WebView.
 
-- Zwei freie, gleiche Steine antippen, um sie zu entfernen; Blumen und Jahreszeiten passen innerhalb ihrer Gruppe zueinander. Jede Verteilung ist lösbar; gehen die Paare aus, werden die verbliebenen Steine neu gemischt.
-- Zehn Minuten ab dem ersten Paar, Punkte je nach Steinfarbe und verbliebenen Steinen, Folgen in derselben Farbe vervielfachen, Zeitbonus beim Abräumen, gespeicherte Bestleistung. Dazu Tipp, Pause und eine kurze Anleitung.
-- Fünf Steinsätze, in den Einstellungen auswählbar und gemerkt, auch mitten im Spiel: Perlmutt (Perlmuttplatte auf dunklem Lack, Rückseite mit eingelegtem Mond), Jade (heller, geäderter Stein mit gravierten, pigmentgefüllten Zeichen, Rückseite mit geschnitztem Ringgeflecht), Seeglas (mattes, lichtdurchlässiges Glas, in dem die Zeichen eingeschlossen liegen, Rückseite mit sandgestrahlten Wellen), Porzellan (weiße Glasur mit Kobaltringen und Emailfarben, Rückseite mit blauem Medaillon) und Schwarzlack (Urushi mit Goldrahmen und Goldflitter auf roten Lackseiten, Rückseite mit Mond über Wellen). Jeder Satz zeigt die überlieferten 42 Bilder mit ihrer roten, grünen und blauen Farbgebung; nur das Material wechselt.
-- Gefundene Paare heben ab, drehen sich in der Luft auf die Rückseite und sammeln sich als wachsender Stapel neben dem Feld; das Spiel bleibt dabei bedienbar. Ist das Feld leer, verneigt sich der ganze Stapel.
-- Eigenes Logo, eigene Musik und Klänge; alles in dieser App ist eigene Arbeit oder unter einer freien Lizenz (`THIRD-PARTY.md`). Die Steine werden beim Start aus Verläufen, Rauschen und Pfaden gezeichnet, nicht aus Bilddateien geladen.
-- Zwei nahtlos laufende Musikstücke, in den Einstellungen auswählbar und gemerkt: „Mondlicht auf dem Teich“ (Koto, Harfe, Erhu und Streicher; Standard) und „Koto und Erhu“. Beim Wechsel blendet die Musik über.
-- Mehrere in Tusche und Wasserfarben gemalte Hintergründe, in den Einstellungen auswählbar und gemerkt; außerdem Lautstärke für Musik und Effekte, Vibration und das Hervorheben freier Steine.
-- Kein Internet nötig, keine Werbung, kein Tracking: Die App fordert keine Internet-Berechtigung an.
-- Im Hintergrund pausiert das Spiel samt Musik; die Zurück-Geste beendet ein laufendes Spiel nicht.
+- Tap two free, matching tiles to remove them. Flowers match other flowers, and seasons match other seasons. Every deal is solvable; if no pairs remain available, the remaining tiles are reshuffled.
+- The ten-minute timer starts with the first pair. Scoring depends on the tile suit and the number of tiles remaining, with multipliers for consecutive matches in the same suit and a time bonus for clearing the board. Your best score is saved. Hints, pause, and a short how-to-play guide are included.
+- Choose from five tile sets in Settings, even during a game. Your choice is saved:
+  - **Mother-of-pearl:** a pearl slab on dark lacquer, with an inlaid moon on the back.
+  - **Jade:** pale, veined stone with engraved, pigment-filled symbols and carved interlocking rings on the back.
+  - **Sea glass:** frosted, translucent glass with embedded symbols and sandblasted waves on the back.
+  - **Porcelain:** white glaze with cobalt rings and enamel colors, with a blue medallion on the back.
+  - **Black lacquer:** urushi with gold frames and gold flecks over red lacquer sides, with a moon above waves on the back.
+  Each set uses the same 42 traditional faces and their recognizable red, green, and blue colors; only the material changes.
+- Matched pairs lift off, flip over, and collect in a growing stack beside the board while you continue playing. When the board is cleared, the whole stack takes a bow.
+- The logo, music, and sound effects are original. Everything in the app is original work or used under a free license; see [THIRD-PARTY.md](THIRD-PARTY.md). Tiles are drawn at startup from gradients, noise, and paths rather than loaded from image files.
+- Two seamless music loops are available in Settings: “Mondlicht auf dem Teich” (“Moonlight on the Pond”; koto, harp, erhu, and strings; the default) and “Koto und Erhu” (“Koto and Erhu”). Your choice is saved, and switching tracks crossfades between them.
+- Choose from several ink-and-watercolor backgrounds. Settings also include music and effects volume, vibration, and free-tile highlighting. Your preferences are saved.
+- No internet connection, ads, or tracking. The app does not request internet permission.
+- The game and music pause when the app is in the background. The Back gesture does not end a game in progress.
 
-## Bauen
+## Languages
 
-Benötigt: JDK 17 oder neuer, Node 20 oder neuer (nur für die Tests), `zip` und das Android SDK mit Build-Tools 34.0.0 und Plattform 34. Unter Debian/Ubuntu:
+The interface supports 18 locales: English (`en`), German (`de`), French (`fr`), Spanish (`es`), Italian (`it`), Portuguese (`pt`), Dutch (`nl`), Polish (`pl`), Turkish (`tr`), Russian (`ru`), Ukrainian (`uk`), Arabic (`ar`), Hindi (`hi`), Indonesian (`id`), Japanese (`ja`), Korean (`ko`), Simplified Chinese (`zh-Hans`), and Traditional Chinese (`zh-Hant`).
+
+The game automatically selects a supported language from your device's language preferences, falling back to English when no supported language matches. You can choose a different language in Settings; that override is saved for future launches. All translations are bundled with the app and work offline. Scripts not covered by the bundled fonts use system-font fallbacks.
+
+## Build
+
+Requirements: JDK 17 or later, Node 20 or later (for tests only), `zip`, and the Android SDK with Build-Tools 34.0.0 and Platform 34. On Debian/Ubuntu, install the Android packages with:
 
 ```sh
 sudo apt install google-android-build-tools-34.0.0-installer google-android-platform-34-installer
 ```
 
-Ein SDK an anderer Stelle wird mit `ANDROID_HOME` angegeben.
+Set `ANDROID_HOME` if your SDK is installed elsewhere.
 
 ```sh
 npm test
 scripts/build-apk
 ```
 
-Ergebnis: `build/misty-mahjong.apk`. Signiert wird mit dem Android-Debug-Schlüssel `~/.android/debug.keystore` (wird angelegt, falls er fehlt). Updates lassen sich nur mit demselben Schlüssel über eine installierte Version installieren.
+The resulting APK is `build/misty-mahjong.apk`. It is signed with the Android debug key at `~/.android/debug.keystore`, which is created if it does not exist. To update an installed version without uninstalling it, sign the update with the same key.
 
-Musik, Klänge und Hintergründe liegen fertig im Repository; `tools/make_audio.py` (numpy, scipy, ffmpeg) und `tools/paint_backgrounds.py` (numpy, Pillow) erzeugen sie neu.
+Ready-to-use music, sound effects, and backgrounds are included in the repository. To regenerate them, use `tools/make_audio.py` (requires numpy, scipy, and ffmpeg) and `tools/paint_backgrounds.py` (requires numpy and Pillow).
 
-## Installieren
+## Install
 
-Die APK aufs Gerät kopieren und öffnen (einmalig „Installation aus unbekannten Quellen“ erlauben) oder per USB:
+Copy the APK to your device and open it, allowing installation from unknown sources when prompted. Alternatively, install it over USB:
 
 ```sh
 adb install -r build/misty-mahjong.apk
 ```
 
-## Kompatibilität
+## Compatibility
 
-Android 7.0 (API 24) oder neuer mit aktuellem Android System WebView, Querformat. Geprüft am 2026-10-19 auf einem OnePlus CPH2653 mit Android 16 (alle fünf Steinsätze, flüssig bei 120 Hz), zusätzlich mit simulierter Tablet-Auflösung 2560×1600 bei 320 dpi und in Chromium mit emulierten Tablet-Größen 2560×1600 und 2048×1536.
+Requires Android 7.0 (API 24) or later with an up-to-date Android System WebView. Designed for landscape orientation.
 
-## Lizenz
+Previously checked on 2026-10-19 on a OnePlus CPH2653 running Android 16, with all five tile sets running smoothly at 120 Hz. Checks also covered a simulated tablet resolution of 2560×1600 at 320 dpi and Chromium with emulated tablet sizes of 2560×1600 and 2048×1536. These are the existing compatibility checks, not new device verification of the translations.
 
-Spiel, Grafiken, Musik und Klänge sind eigene Arbeit des Eigentümers. Die eingebetteten Schriften stehen unter der SIL Open Font License (siehe `THIRD-PARTY.md`).
+## License
+
+The game, graphics, music, and sound effects are original work by the owner. The bundled fonts are licensed under the SIL Open Font License. See [THIRD-PARTY.md](THIRD-PARTY.md) for third-party components and their licenses.
