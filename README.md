@@ -2,7 +2,7 @@
 
 Ein ruhiges Mahjong-Solitär für Android-Smartphones und -Tablets, mit fünf eigenen Steinsätzen aus edlen Materialien, eigener Musik und auswählbaren Hintergründen im Stil asiatischer Tuschmalerei.
 
-Status: prototype. Nur für den privaten Gebrauch; die APK wird nicht weitergegeben.
+Status: prototype. Die Oberfläche ist auf Deutsch.
 
 ![Spielfeld auf einem Smartphone](docs/screenshot.jpg)
 
